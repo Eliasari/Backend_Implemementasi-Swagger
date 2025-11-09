@@ -21,7 +21,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// @title API Alumni Management
+// @version 1.0
+// @description API untuk mengelola data alumni, user, dan pekerjaan alumni
+// @host localhost:3000
+// @BasePath /
+// @schemes http
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+
 func RegisterRoutes(app *fiber.App, db *mongo.Database) {
+
     AuthRoutes(app, db)
     UserRoutes(app, db)
     AlumniRoutes(app, db)

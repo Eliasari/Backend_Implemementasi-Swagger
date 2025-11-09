@@ -103,15 +103,17 @@ func PekerjaanRoutes(app *fiber.App, db *mongo.Database) {
 		return service.GetPekerjaanByAlumniIDService(c, repo)
 	})
 
+	// GET ALL → admin lihat semua, user lihat pekerjaan alumni miliknya
+	pekerjaan.Get("/all", func(c *fiber.Ctx) error {
+		return service.GetAllPekerjaanService(c, repo)
+	})
+
 	// GET BY ID → cek ownership kalau bukan admin
 	pekerjaan.Get("/:id", func(c *fiber.Ctx) error {
 		return service.GetPekerjaanByIDService(c, repo)
 	})
 
-	// GET ALL → admin lihat semua, user lihat pekerjaan alumni miliknya
-	pekerjaan.Get("/pekerjaan/all", func(c *fiber.Ctx) error {
-		return service.GetAllPekerjaanService(c, repo)
-	})
+
 
 
 }

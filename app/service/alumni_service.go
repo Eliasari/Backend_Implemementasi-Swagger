@@ -219,6 +219,19 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// CreateAlumniService godoc
+// @Summary Tambah alumni baru
+// @Description Menambahkan data alumni ke database, user_id diambil dari JWT token
+// @Tags Alumni
+// @Accept json
+// @Produce json
+// @Param body body model.Alumni true "Data alumni"
+// @Success 201 {object} model.Response
+// @Failure 400 {object} model.Response
+// @Failure 401 {object} model.Response
+// @Failure 500 {object} model.Response
+// @Security BearerAuth
+// @Router /alumni [post]
 func CreateAlumniService(c *fiber.Ctx, repo *repository.AlumniRepository) error {
 	var alumni model.Alumni
 	if err := c.BodyParser(&alumni); err != nil {
@@ -270,6 +283,19 @@ func CreateAlumniService(c *fiber.Ctx, repo *repository.AlumniRepository) error 
 	})
 }
 
+// UpdateAlumniService godoc
+// @Summary Update data alumni
+// @Description Memperbarui data alumni berdasarkan ID
+// @Tags Alumni
+// @Accept json
+// @Produce json
+// @Param id path string true "ID Alumni"
+// @Param body body model.UpdateAlumni true "Data alumni yang diupdate"
+// @Success 200 {object} model.Response
+// @Failure 400 {object} model.Response
+// @Failure 500 {object} model.Response
+// @Security BearerAuth
+// @Router /alumni/{id} [put]
 func UpdateAlumniService(c *fiber.Ctx, repo *repository.AlumniRepository) error {
 	id := c.Params("id")
 
@@ -299,7 +325,15 @@ func UpdateAlumniService(c *fiber.Ctx, repo *repository.AlumniRepository) error 
 	})
 }
 
-
+// DeleteAlumniService godoc
+// @Summary Hapus alumni
+// @Description Menghapus data alumni berdasarkan ID
+// @Tags Alumni
+// @Param id path string true "ID Alumni"
+// @Success 200 {object} model.Response
+// @Failure 500 {object} model.Response
+// @Security BearerAuth
+// @Router /alumni/{id} [delete]
 func DeleteAlumniService(c *fiber.Ctx, repo *repository.AlumniRepository) error {
 	id := c.Params("id")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -312,6 +346,19 @@ func DeleteAlumniService(c *fiber.Ctx, repo *repository.AlumniRepository) error 
 	return c.JSON(fiber.Map{"message": "Alumni berhasil dihapus", "success": true})
 }
 
+// GetAllAlumniService godoc
+// @Summary Ambil semua data alumni
+// @Description Menampilkan semua data alumni dengan pagination dan pencarian
+// @Tags Alumni
+// @Accept json
+// @Produce json
+// @Param page query int false "Halaman (default 1)"
+// @Param limit query int false "Limit per halaman (default 10)"
+// @Param search query string false "Kata kunci pencarian"
+// @Success 200 {object} model.AlumniResponse
+// @Failure 500 {object} model.Response
+// @Security BearerAuth
+// @Router /alumni [get]
 func GetAllAlumniService(c *fiber.Ctx, repo *repository.AlumniRepository) error {
 	page, _ := strconv.ParseInt(c.Query("page", "1"), 10, 64)
 	limit, _ := strconv.ParseInt(c.Query("limit", "10"), 10, 64)

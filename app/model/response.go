@@ -15,3 +15,8 @@ type UserResponse struct {
 	Meta MetaInfo `json:"meta"`
 }
 
+type Response struct {
+    Success bool        `json:"success" example:"true"`
+    Message string      `json:"message" example:"Operasi berhasil"`
+    Data    interface{} `json:"data,omitempty"`
+}

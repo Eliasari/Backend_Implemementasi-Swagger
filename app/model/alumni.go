@@ -53,6 +53,7 @@ type Alumni struct {
 	UserID     primitive.ObjectID `bson:"user_id" json:"user_id"`
 }
 
+
 type UpdateAlumni struct {
 	NIM        string    `json:"nim" bson:"nim,omitempty"`
 	Nama       string    `json:"nama" bson:"nama,omitempty"`

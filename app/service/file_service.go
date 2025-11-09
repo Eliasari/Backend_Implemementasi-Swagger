@@ -15,6 +15,20 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// UploadFileService godoc
+// @Summary Upload file
+// @Description Upload file (admin bisa untuk user lain, user hanya untuk dirinya sendiri)
+// @Tags Files
+// @Accept multipart/form-data
+// @Produce json
+// @Param type formData string true "Tipe file (photo/certificate)"
+// @Param user_id formData string false "ID user (hanya untuk admin)"
+// @Param file formData file true "File yang diupload"
+// @Success 200 {object} model.Response
+// @Failure 400 {object} model.Response
+// @Failure 500 {object} model.Response
+// @Security BearerAuth
+// @Router /files/upload [post]
 func UploadFileService(repo *repository.FileRepository) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		role := c.Locals("role").(string)
@@ -77,6 +91,15 @@ func UploadFileService(repo *repository.FileRepository) fiber.Handler {
 	}
 }
 
+// GetFilesService godoc
+// @Summary Ambil semua file
+// @Description Menampilkan semua file (admin lihat semua, user hanya miliknya)
+// @Tags Files
+// @Produce json
+// @Success 200 {object} model.Response
+// @Failure 500 {object} model.Response
+// @Security BearerAuth
+// @Router /files [get]
 func GetFilesService(repo *repository.FileRepository) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		role := c.Locals("role").(string)
@@ -94,6 +117,17 @@ func GetFilesService(repo *repository.FileRepository) fiber.Handler {
 	}
 }
 
+// GetFileByIDService godoc
+// @Summary Ambil file berdasarkan ID
+// @Description Mengambil detail file berdasarkan ID (hanya pemilik atau admin)
+// @Tags Files
+// @Param id path string true "ID File"
+// @Produce json
+// @Success 200 {object} model.Response
+// @Failure 403 {object} model.Response
+// @Failure 404 {object} model.Response
+// @Security BearerAuth
+// @Router /files/{id} [get]
 func GetFileByIDService(repo *repository.FileRepository) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
@@ -133,7 +167,18 @@ func GetFileByIDService(repo *repository.FileRepository) fiber.Handler {
 	}
 }
 
-
+// DeleteFileService godoc
+// @Summary Hapus file
+// @Description Menghapus file dari sistem dan database (admin atau pemilik)
+// @Tags Files
+// @Param id path string true "ID File"
+// @Produce json
+// @Success 200 {object} model.Response
+// @Failure 403 {object} model.Response
+// @Failure 404 {object} model.Response
+// @Failure 500 {object} model.Response
+// @Security BearerAuth
+// @Router /files/{id} [delete]
 func DeleteFileService(repo *repository.FileRepository) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")

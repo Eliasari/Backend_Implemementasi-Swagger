@@ -33,19 +33,24 @@ import (
     "os"
     "go-fiber/config"
     "go-fiber/database"
+    "go-fiber/routes"
+
+    _ "go-fiber/docs" 
+    fiberSwagger "github.com/swaggo/fiber-swagger"
 )
 
 func main() {
     config.LoadEnv()
 
-    // ✅ Panggil ConnectMongo()
     db := database.ConnectMongo()
     if db == nil {
         log.Fatal("❌ Gagal konek ke MongoDB — return nil")
     }
 
-    // ✅ Kirim db ke app
     app := config.NewApp(db)
+    app.Get("/swagger/*", fiberSwagger.WrapHandler)
+
+    routes.RegisterRoutes(app, db)
 
     port := os.Getenv("APP_PORT")
     if port == "" {

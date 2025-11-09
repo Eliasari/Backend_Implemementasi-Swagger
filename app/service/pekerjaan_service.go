@@ -343,6 +343,18 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+// CreatePekerjaanService godoc
+// @Summary Tambah data pekerjaan
+// @Description Menambahkan data pekerjaan baru ke database
+// @Tags Pekerjaan
+// @Accept json
+// @Produce json
+// @Param body body model.Pekerjaan true "Data pekerjaan"
+// @Success 201 {object} model.Response
+// @Failure 400 {object} model.Response
+// @Failure 500 {object} model.Response
+// @Security BearerAuth
+// @Router /pekerjaan [post]
 func CreatePekerjaanService(c *fiber.Ctx, repo *repository.PekerjaanRepository) error {
 	var pekerjaan model.Pekerjaan
 	if err := c.BodyParser(&pekerjaan); err != nil {
@@ -382,7 +394,19 @@ func CreatePekerjaanService(c *fiber.Ctx, repo *repository.PekerjaanRepository) 
 	})
 }
 
-
+// UpdatePekerjaanService godoc
+// @Summary Update data pekerjaan
+// @Description Memperbarui data pekerjaan berdasarkan ID
+// @Tags Pekerjaan
+// @Accept json
+// @Produce json
+// @Param id path string true "ID Pekerjaan"
+// @Param body body model.UpdatePekerjaan true "Data pekerjaan yang diupdate"
+// @Success 200 {object} model.Response
+// @Failure 400 {object} model.Response
+// @Failure 500 {object} model.Response
+// @Security BearerAuth
+// @Router /pekerjaan/{id} [put]
 func UpdatePekerjaanService(c *fiber.Ctx, repo *repository.PekerjaanRepository) error {
 	idParam := c.Params("id")
 
@@ -423,7 +447,16 @@ func UpdatePekerjaanService(c *fiber.Ctx, repo *repository.PekerjaanRepository) 
 	})
 }
 
-
+// DeletePekerjaanService godoc
+// @Summary Hapus data pekerjaan
+// @Description Menghapus data pekerjaan berdasarkan ID
+// @Tags Pekerjaan
+// @Param id path string true "ID Pekerjaan"
+// @Success 200 {object} model.Response
+// @Failure 400 {object} model.Response
+// @Failure 500 {object} model.Response
+// @Security BearerAuth
+// @Router /pekerjaan/{id} [delete]
 func DeletePekerjaanService(c *fiber.Ctx, repo *repository.PekerjaanRepository) error {
 	idParam := c.Params("id")
 
@@ -454,9 +487,15 @@ func DeletePekerjaanService(c *fiber.Ctx, repo *repository.PekerjaanRepository) 
 }
 
 
-// ============================================================
-// GET SEMUA PEKERJAAN
-// ============================================================
+// GetAllPekerjaanService godoc
+// @Summary Ambil semua data pekerjaan
+// @Description Mengambil semua data pekerjaan (admin bisa lihat semua, user hanya miliknya sendiri)
+// @Tags Pekerjaan
+// @Produce json
+// @Success 200 {object} model.Response
+// @Failure 500 {object} model.Response
+// @Security BearerAuth
+// @Router /pekerjaan/all [get]
 func GetAllPekerjaanService(c *fiber.Ctx, repo *repository.PekerjaanRepository) error {
 	role := c.Locals("role").(string)
 	userIDStr := c.Locals("user_id").(string)
@@ -493,10 +532,18 @@ func GetAllPekerjaanService(c *fiber.Ctx, repo *repository.PekerjaanRepository) 
 
 }
 
-// ============================================================
-// GET PEKERJAAN BY ID
-// ============================================================
-
+// GetPekerjaanByIDService godoc
+// @Summary Ambil pekerjaan berdasarkan ID
+// @Description Mengambil detail pekerjaan berdasarkan ID, hanya admin atau pemilik yang dapat mengakses
+// @Tags Pekerjaan
+// @Param id path string true "ID Pekerjaan"
+// @Produce json
+// @Success 200 {object} model.Response
+// @Failure 400 {object} model.Response
+// @Failure 403 {object} model.Response
+// @Failure 404 {object} model.Response
+// @Security BearerAuth
+// @Router /pekerjaan/{id} [get]
 func GetPekerjaanByIDService(c *fiber.Ctx, repo *repository.PekerjaanRepository) error {
 	idStr := c.Params("id")
 	objID, err := primitive.ObjectIDFromHex(idStr)
@@ -552,9 +599,18 @@ func GetPekerjaanByIDService(c *fiber.Ctx, repo *repository.PekerjaanRepository)
 	})
 }
 
-// ============================================================
-// GET PEKERJAAN BY ALUMNI_ID (HANYA ADMIN)
-// ============================================================
+// GetPekerjaanByAlumniIDService godoc
+// @Summary Ambil pekerjaan berdasarkan ID Alumni (admin only)
+// @Description Mengambil semua pekerjaan yang dimiliki oleh alumni tertentu (khusus admin)
+// @Tags Pekerjaan
+// @Param alumni_id path string true "ID Alumni"
+// @Produce json
+// @Success 200 {object} model.Response
+// @Failure 400 {object} model.Response
+// @Failure 403 {object} model.Response
+// @Failure 500 {object} model.Response
+// @Security BearerAuth
+// @Router /pekerjaan/alumni/{alumni_id} [get]
 func GetPekerjaanByAlumniIDService(c *fiber.Ctx, repo *repository.PekerjaanRepository) error {
 	role := c.Locals("role").(string)
 	if role != "admin" {
